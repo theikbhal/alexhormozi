@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alex Hormozi Shorts</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: white;
+      padding: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #facc15;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .video-card {
+      background-color: #1f1f1f;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .video-card iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+    }
+
+    .title {
+      padding: 0.75rem 1rem;
+      font-weight: bold;
+      font-size: 1rem;
+      border-top: 1px solid #333;
+    }
+
+    @media (max-width: 600px) {
+      .video-card iframe {
+        height: 300px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🔥 Alex Hormozi Shorts</h1>
+  <div class="video-grid" id="videoContainer"></div>
+
+  <script>
+    const videos = [
+      {
+        title: "How Much Money 💰 Have You Spent At Starbucks?",
+        url: "https://www.youtube.com/embed/kvw5tJrLvrM"
+      },
+      {
+        title: "Here's A Lesson I Learned At 28",
+        url: "https://www.youtube.com/embed/b1bULrwE4gg"
+      },
+      {
+        title: "Would You Give The $50,000 Back?",
+        url: "https://www.youtube.com/embed/4hrXB8g-6O0"
+      },
+      {
+        title: "Honest Persuasion Technique to Make More Sales",
+        url: "https://www.youtube.com/embed/9bji-hkw2Zg"
+      },
+      {
+        title: "Assuming Close Technique",
+        url: "https://www.youtube.com/embed/UwckxWmoXZQ"
+      },
+      {
+        title: "Marriage Proposal Method to CLOSE MORE SALES",
+        url: "https://www.youtube.com/embed/3cE3M0xXHnI"
+      },
+      {
+        title: "The Habits That Have Made Me The Most Money",
+        url: "https://www.youtube.com/embed/wJxQxRAqdX8"
+      }
+    ];
+
+    const container = document.getElementById("videoContainer");
+
+    videos.forEach(video => {
+      const card = document.createElement("div");
+      card.className = "video-card";
+      card.innerHTML = `
+        <iframe src="${video.url}" allowfullscreen></iframe>
+        <div class="title">${video.title}</div>
+      `;
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>
