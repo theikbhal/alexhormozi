@@ -46,6 +46,28 @@
       border-top: 1px solid #333;
     }
 
+    .pagination {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .pagination button {
+      background-color: #facc15;
+      color: #000;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .pagination button:disabled {
+      background-color: #444;
+      color: #888;
+      cursor: not-allowed;
+    }
+
     @media (max-width: 600px) {
       .video-card iframe {
         height: 300px;
@@ -61,49 +83,84 @@
   <h1>🔥 Alex Hormozi Shorts</h1>
   <div class="video-grid" id="videoContainer"></div>
 
+  <div class="pagination">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
+
   <script>
     const videos = [
-      {
-        title: "How Much Money 💰 Have You Spent At Starbucks?",
-        url: "https://www.youtube.com/embed/kvw5tJrLvrM"
-      },
-      {
-        title: "Here's A Lesson I Learned At 28",
-        url: "https://www.youtube.com/embed/b1bULrwE4gg"
-      },
-      {
-        title: "Would You Give The $50,000 Back?",
-        url: "https://www.youtube.com/embed/4hrXB8g-6O0"
-      },
-      {
-        title: "Honest Persuasion Technique to Make More Sales",
-        url: "https://www.youtube.com/embed/9bji-hkw2Zg"
-      },
-      {
-        title: "Assuming Close Technique",
-        url: "https://www.youtube.com/embed/UwckxWmoXZQ"
-      },
-      {
-        title: "Marriage Proposal Method to CLOSE MORE SALES",
-        url: "https://www.youtube.com/embed/3cE3M0xXHnI"
-      },
-      {
-        title: "The Habits That Have Made Me The Most Money",
-        url: "https://www.youtube.com/embed/wJxQxRAqdX8"
-      }
+      { title: "How Much Money 💰 Have You Spent At Starbucks?", url: "https://www.youtube.com/embed/kvw5tJrLvrM" },
+      { title: "Here's A Lesson I Learned At 28", url: "https://www.youtube.com/embed/b1bULrwE4gg" },
+      { title: "Would You Give The $50,000 Back?", url: "https://www.youtube.com/embed/4hrXB8g-6O0" },
+      { title: "Honest Persuasion Technique to Make More Sales", url: "https://www.youtube.com/embed/9bji-hkw2Zg" },
+      { title: "Assuming Close Technique", url: "https://www.youtube.com/embed/UwckxWmoXZQ" },
+      { title: "Marriage Proposal Method to CLOSE MORE SALES", url: "https://www.youtube.com/embed/3cE3M0xXHnI" },
+      { title: "The Habits That Have Made Me The Most Money", url: "https://www.youtube.com/embed/wJxQxRAqdX8" },
+      { title: "8 Things You Can Sell as a Business Owner", url: "https://www.youtube.com/embed/UT1jJDimPGU" },
+      { title: "EASIEST way to create a Competitive Advantage", url: "https://www.youtube.com/embed/LhpDeTDkGKk" },
+      { title: "What Would You Do If You Knew You Wouldn't Get Caught?", url: "https://www.youtube.com/embed/bxtWBquNxp4" },
+      { title: "Sales Hack To Get More Yes's", url: "https://www.youtube.com/embed/65CrWFmJ4S8" },
+      { title: "#1 Tip To Networking No One Will Tell You", url: "https://www.youtube.com/embed/Yc1Pb3VQA_k" },
+      { title: "How to Close the Sale", url: "https://www.youtube.com/embed/Xw08guwadh0" },
+      { title: "3 Magic Words For Closing Sales!", url: "https://www.youtube.com/embed/F2c-T2RFV40" },
+      { title: "How To Get Into The Top 1%", url: "https://www.youtube.com/embed/gBhfs7N3QPg" },
+      { title: "How Rich People Pay Taxes", url: "https://www.youtube.com/embed/qnsvJvBWiGM" },
+      { title: "When You Should NEVER Lower Your Prices ❌📈💰", url: "https://www.youtube.com/embed/VYS6FD4Kbhs" },
+      { title: "How to Get ANYONE'S Phone Number", url: "https://www.youtube.com/embed/aZjeObwxNSM" },
+      { title: "Tax Tip for Small Business Owners", url: "https://www.youtube.com/embed/7-NjRStRu0g" },
+      { title: "Whenever You Are Afraid To Do Something", url: "https://www.youtube.com/embed/pUOaoqdM-90" },
+      { title: "The 4 Biggest Decisions You Need To Make In Your Life", url: "https://www.youtube.com/embed/1RHkVRZ0GYI" },
+      { title: "Watch This If You're 18 and want to make money", url: "https://www.youtube.com/embed/PIg0nYHAMpg" },
+      { title: "The Secret To Selling: Give A Sh*T", url: "https://www.youtube.com/embed/Naq5cJ7wRc8" },
+      { title: "Are You Entitled?", url: "https://www.youtube.com/embed/V6keIwg71R8" },
+      { title: "Anyone Under $10M/Year Watch This", url: "https://www.youtube.com/embed/lS_Mzenyl-E" },
     ];
 
     const container = document.getElementById("videoContainer");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
-    videos.forEach(video => {
-      const card = document.createElement("div");
-      card.className = "video-card";
-      card.innerHTML = `
-        <iframe src="${video.url}" allowfullscreen></iframe>
-        <div class="title">${video.title}</div>
-      `;
-      container.appendChild(card);
+    const perPage = 10;
+    let currentPage = 1;
+    const totalPages = Math.ceil(videos.length / perPage);
+
+    function renderPage(page) {
+      container.innerHTML = '';
+      const start = (page - 1) * perPage;
+      const end = page * perPage;
+      const currentVideos = videos.slice(start, end);
+
+      currentVideos.forEach(video => {
+        const card = document.createElement("div");
+        card.className = "video-card";
+        card.innerHTML = `
+          <iframe src="${video.url}" allowfullscreen></iframe>
+          <div class="title">${video.title}</div>
+        `;
+        container.appendChild(card);
+      });
+
+      prevBtn.disabled = page === 1;
+      nextBtn.disabled = page === totalPages;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+      }
     });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderPage(currentPage);
+      }
+    });
+
+    // Initial render
+    renderPage(currentPage);
   </script>
 </body>
 </html>
